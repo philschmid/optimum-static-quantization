@@ -1,0 +1,3 @@
+optimum[onnxruntime]==1.2.1
+mkl-include
+mkl

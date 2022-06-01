@@ -20,3 +20,24 @@ install jupyter lab
 pip3 install jupyter
 jupyter notebook
 ```
+
+### Mamba or [Micromamba](https://labs.epi2me.io/conda-or-mamba-for-production/) setup (conda alternative but smaller)
+
+Micromamba
+```bash
+sudo apt-get install bzip2
+# Assuming linux
+wget -qO- https://micromamba.snakepit.net/api/micromamba/linux-64/latest -o test | tar -xvj -C ~/
+~/bin/micromamba shell init -s bash -p ~/micromamba
+source ~/.bashrc
+
+# Installing packages is mostly similar
+micromamba activate
+micromamba install python=3.9 jupyter -c conda-forge
+```
+
+### Install python dependencies
+
+```bash
+pip install -r requirements.txt
+```

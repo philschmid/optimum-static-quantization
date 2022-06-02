@@ -21,7 +21,17 @@ pip3 install jupyter
 jupyter notebook
 ```
 
-### Mamba or [Micromamba](https://labs.epi2me.io/conda-or-mamba-for-production/) setup (conda alternative but smaller)
+### [Miniconda](https://waylonwalker.com/install-miniconda/#installing-miniconda-on-linux) or [Micromamba](https://labs.epi2me.io/conda-or-mamba-for-production/) setup (conda alternative but smaller)
+
+Miniconda
+```bash
+mkdir -p ~/miniconda3
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda3/miniconda.sh
+bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
+rm -rf ~/miniconda3/miniconda.sh
+~/miniconda3/bin/conda init bash
+~/miniconda3/bin/conda init zsh
+```
 
 Micromamba
 ```bash

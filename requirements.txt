@@ -1,3 +1,5 @@
-optimum[onnxruntime]==1.2.1
+optimum[onnxruntime]==1.2.2
+evaluate 
+sklearn
 mkl-include
 mkl

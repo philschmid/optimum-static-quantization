@@ -3,5 +3,4 @@ evaluate
 sklearn
 mkl-include
 mkl
-
- python run_glue.py     --model_name_or_path mrm8488/distilroberta-finetuned-banking77     --dataset_name banking77     --quantization_approach static     --calibration_method percentile     --num_calibration_shards 50     --do_eval     --output_dir tmp/quantized_distilbert_sst
+optuna

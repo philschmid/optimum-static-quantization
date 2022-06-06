@@ -51,3 +51,10 @@ micromamba install python=3.9 jupyter -c conda-forge
 ```bash
 pip install -r requirements.txt
 ```
+
+
+## Run static quantziation with HPO 
+
+```bash
+python scripts/run_static_quantizatio_hpo.py  --model_id philschmid/MiniLMv2-L12-H384-distilled-finetuned-clinc --dataset_id clinc_oos --dataset_config small
+```

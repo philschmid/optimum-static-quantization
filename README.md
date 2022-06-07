@@ -56,5 +56,14 @@ pip install -r requirements.txt
 ## Run static quantziation with HPO 
 
 ```bash
-python scripts/run_static_quantizatio_hpo.py  --model_id philschmid/MiniLMv2-L12-H384-distilled-finetuned-clinc --dataset_id clinc_oos --dataset_config small
+python scripts/run_static_quantizatio_hpo.py  --model_id mrm8488/distilroberta-finetuned-banking77 
 ```
+Best result is `{'percentile': 99.92917937446141}. Best is trial 50 with value: 0.8948051948051948.`
+
+
+## todos
+
+* [ ] move qprecossor to utils file
+* [ ] clean notebook
+* [ ] move dynamic to separate notebook
+* [ ] add context

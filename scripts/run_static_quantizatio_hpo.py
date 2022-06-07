@@ -11,6 +11,8 @@ from pathlib import Path
 
 import evaluate
 import optuna
+from optuna.samplers import TPESampler
+
 from datasets import load_dataset
 from onnxruntime.quantization import QuantFormat, QuantizationMode, QuantType
 from optimum.onnxruntime import ORTModelForSequenceClassification, ORTQuantizer
@@ -31,19 +33,12 @@ logger = logging.getLogger(__name__)
 def parse_args():
     parser = argparse.ArgumentParser()
     # hyperparameters sent by the client are passed as command-line arguments to the script.
-    parser.add_argument("--model_id", type=str, default="mrm8488/distilroberta-finetuned-banking77")
+    parser.add_argument("--model_id", type=str, default="optimum/distilbert-base-uncased-finetuned-banking77")
 
     parser.add_argument("--dataset_id", type=str, default="banking77")
     parser.add_argument("--dataset_config", type=str, default="default")
-    parser.add_argument("--n_trials", type=int, default=50)
-
+    parser.add_argument("--n_trials", type=int, default=100)
     parser.add_argument("--onnx_path", type=str, default="onnx")
-
-    # # Data, model, and output directories
-    # parser.add_argument("--model_dir", type=str, default=os.environ["SM_MODEL_DIR"])
-    # parser.add_argument("--training_dir", type=str, default=os.environ["SM_CHANNEL_TRAIN"])
-    # parser.add_argument("--validation_dir", type=str, default=os.environ["SM_CHANNEL_VALIDATION"])
-    # parser.add_argument("--test_dir", type=str, default=os.environ["SM_CHANNEL_TEST"])
 
     args, _ = parser.parse_known_args()
     return args
@@ -81,7 +76,8 @@ def main(args):
         is_static=True,
         format=QuantFormat.QOperator,
         mode=QuantizationMode.QLinearOps,
-        per_channel=False,
+        per_channel=True,
+        operators_to_quantize=["MatMul", "Add"],
     )
 
     def preprocess_fn(ex, tokenizer):
@@ -141,7 +137,7 @@ def main(args):
                 onnx_quantized_model_output_path=Path(tmpdirname) / "model-quantized.onnx",
                 calibration_tensors_range=ranges,
                 quantization_config=qconfig,
-                # preprocessor=quantization_preprocessor,
+                preprocessor=quantization_preprocessor,
             )
 
             shutil.copyfile(onnx_path / "config.json", Path(tmpdirname) / "config.json")
@@ -159,7 +155,11 @@ def main(args):
 
         return results["accuracy"]
 
-    study = optuna.create_study(direction="maximize", study_name=f"quantize-{args.model_id}")
+    study = optuna.create_study(
+        direction="maximize",
+        study_name=f"quantize-{args.model_id}",
+        sampler=TPESampler(n_startup_trials=round(args.n_trials * 0.15)),
+    )
     study.optimize(static_quantization, n_trials=args.n_trials)
 
     print(study.best_params)  # E.g. {'x': 2.002108042}
